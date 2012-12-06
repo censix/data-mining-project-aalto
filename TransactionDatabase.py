@@ -75,7 +75,7 @@ class TransactionDatabase(object):
     def loadFromFile(filename):
         """
         Loads transactions from CSV file of form
-        a,b,c....d,label
+        a,b,c...,label
         """
         database = TransactionDatabase()
 

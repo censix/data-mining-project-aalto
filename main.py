@@ -1,4 +1,6 @@
 from DDPMine import DDPMine
+from fptree import FPTree
+from TransactionDatabase import TransactionDatabase
 
 def run_ddpmine():
     # Just some placeholder data
@@ -7,4 +9,14 @@ def run_ddpmine():
 
 
 if __name__ == "__main__":
-    run_ddpmine()
+    database = TransactionDatabase.loadFromFile("test.csv")
+    database.cleanAndPrune(2)
+    print "Cleaned database:"
+    print database
+    print "\nItems in FP tree and corresponding nodes:"
+    tree = FPTree()
+    for t in database:
+        tree.add(t)
+
+    print str(tree)
+    #run_ddpmine()
