@@ -142,7 +142,29 @@ class FPTree(object):
             printable.append(item)
             for node in nodeiterator:
                 printable.append(node)
-
         return "\n".join([repr(s) for s in printable])
+
+    def UpdateTree(self, transactions):
+	"""
+	Updates the tree and decrements count in the node - removes node if count
+	is zero
+	"""
+  
+	# Iterate over the transactions
+	for transaction in transactions:
+		next_point = self.root(self)
+		for item in transaction.itemset:
+			curr_point = next_point
+		        next_point = next_point.search(item)
+			next_point._count = next_point._count -1 # update the count
+			
+			if next_point._count is 0: 
+				curr_point._remove(curr_point,next_point) 
+		
+		# Some code for updating transaction ID	
+		
+		
+    
+
 
 
