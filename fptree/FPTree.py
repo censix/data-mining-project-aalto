@@ -57,7 +57,9 @@ class FPTree(object):
 
         try:
             route = self._routes[point.item]
+            # Same as route.tail.neighbor
             route[1].neighbor = point # route[1] is the tail
+            # route[0] means route.head
             self._routes[point.item] = self.Route(route[0], point)
         except KeyError:
             # First node for this item; start a new route.
