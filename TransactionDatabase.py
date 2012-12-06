@@ -75,14 +75,12 @@ class TransactionDatabase(object):
     def loadFromFile(filename):
         """
         Loads transactions from CSV file of form
-        id,itemset,label
-
-        id should be transaction number, itemset contain items separated by a space (like "a b c")
+        a,b,c....d,label
         """
         database = TransactionDatabase()
 
-        for line in csv.reader(open(filename)):
-            t = Transaction(line[0], line[1].split(" "), line[2])
+        for i, line in enumerate(csv.reader(open(filename))):
+            t = Transaction(i, line[:-1], line[-1])
             database.add(t)
 
         return database
