@@ -16,4 +16,4 @@ class DDPMine:
         """
         pass
 	
-    def update(self,
+		
