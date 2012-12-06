@@ -15,3 +15,5 @@ class DDPMine:
         discriminative patterns.
         """
         pass
+	
+    def update(self,
