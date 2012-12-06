@@ -1,11 +1,16 @@
 from collections import namedtuple, defaultdict
 import csv
 
-# This behaves like a class:
-# my_transaction = Transaction(id=2, itemset=['a','b','c'], label=1)
-# my_transaction.id == 2
-# my_transaction.itemset == ['a','b','c']
-Transaction = namedtuple("Transaction", "id, itemset, label")
+
+class Transaction(object):
+    def __init__(self, id, itemset, label):
+        self.id = id
+        self.itemset = itemset
+        self.label = label
+
+    def __repr__(self):
+        return "Transaction(id={0}, itemset={1}, label={2})".format(self.id, self.itemset, self.label)
+
 
 class TransactionDatabase(object):
     """
@@ -14,7 +19,7 @@ class TransactionDatabase(object):
     def __init__(self):
         # List of Transactions
         self.transactions = []
-        self.itemCounter = defaultdict(lambda: 0)
+        self.itemSupportDict = defaultdict(lambda: 0)
 
     def buildConditionalDatabase(self, pattern):
         """
@@ -45,7 +50,18 @@ class TransactionDatabase(object):
         Also rearranges itemsets in transactions so that they are in sorted order by
         the support count of items.
         """
-        pass
+        # Prune out infrequent items
+        self.itemSupportDict = dict((item, support) for item, support in self.itemSupportDict.iteritems() if support >= minsup)
+
+        # sorted in decreasing order of frequency.
+        # Function to clean transaction from
+        def clean_transaction(transaction):
+            transaction.itemset = filter(lambda v: v in self.itemSupportDict, transaction.itemset)
+            transaction.itemset.sort(key=lambda v: self.itemSupportDict[v], reverse=True)
+            return transaction
+
+        for i, transaction in enumerate(self.transactions):
+            self.transactions[i] = clean_transaction(transaction)
 
     def add(self, transaction):
         """
@@ -53,7 +69,7 @@ class TransactionDatabase(object):
         """
         self.transactions.append(transaction)
         for item in transaction.itemset:
-            self.itemCounter[item] += 1
+            self.itemSupportDict[item] += 1
 
     @staticmethod
     def loadFromFile(filename):
