@@ -32,6 +32,8 @@ class FPTree(object):
         """
 
         point = self._root
+        
+        last_point = None;
 
         for item in transaction:
             next_point = point.search(item)
@@ -50,6 +52,10 @@ class FPTree(object):
                 self._update_route(next_point)
 
             point = next_point
+            last_point = next_point
+        
+        #add the id as the key and the label as the value to a dictionary stored in the node
+        last_point.transactions[transaction.id] = transaction.label
 
     def _update_route(self, point):
         """Add the given node to the route through all nodes for its item."""

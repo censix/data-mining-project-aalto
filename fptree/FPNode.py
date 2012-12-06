@@ -11,6 +11,7 @@ class FPNode(object):
         self._parent = None
         self._children = {}
         self._neighbor = None
+        self.transactions = {}
 
     def add(self, child):
         """Adds the given FPNode `child` as a child of this node."""
@@ -62,7 +63,7 @@ class FPNode(object):
     def tree(self):
         """The tree in which this node appears."""
         return self._tree
-
+    
     @property
     def item(self):
         """The item contained in this node."""
