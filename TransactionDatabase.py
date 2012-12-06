@@ -37,11 +37,11 @@ class TransactionDatabase(object):
         """
         pass
 
-    def removeTransactions(self, pattern):
+    def removeTransactions(self, transaction_ids):
         """
-        Removes all transactions from the database that match the given pattern.
+        Removes all transactions from the database that are found in the given id list.
         """
-        pass
+        self.transactions = filter(lambda t: t.id not in transaction_ids, self.transactions)
 
     def cleanAndPrune(self, minsup):
         """
