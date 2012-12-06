@@ -1,4 +1,4 @@
-from collections import namedtuple
+from collections import namedtuple, defaultdict
 import csv
 
 # This behaves like a class:
@@ -11,10 +11,10 @@ class TransactionDatabase(object):
     """
     Class for storing transactions.
     """
-    def __init__(self, minsup):
+    def __init__(self):
         # List of Transactions
         self.transactions = []
-        self.minimumSupport = minsup
+        self.itemCounter = defaultdict(lambda: 0)
 
     def buildConditionalDatabase(self, pattern):
         """
@@ -38,19 +38,36 @@ class TransactionDatabase(object):
         """
         pass
 
+    def cleanAndPrune(self, minsup):
+        """
+        Cleans transactions from items which don't have support over given minsup.
+
+        Also rearranges itemsets in transactions so that they are in sorted order by
+        the support count of items.
+        """
+        pass
+
+    def add(self, transaction):
+        """
+        Adds a new transaction to this transaction database.
+        """
+        self.transactions.append(transaction)
+        for item in transaction.itemset:
+            self.itemCounter[item] += 1
+
     @staticmethod
-    def loadFromFile(filename, minsup):
+    def loadFromFile(filename):
         """
         Loads transactions from CSV file of form
         id,itemset,label
 
         id should be transaction number, itemset contain items separated by a space (like "a b c")
         """
-        database = TransactionDatabase(minsup)
+        database = TransactionDatabase()
 
         for line in csv.reader(open(filename)):
             t = Transaction(line[0], line[1].split(" "), line[2])
-            database.transactions.append(t)
+            database.add(t)
 
         return database
 
