@@ -1,5 +1,9 @@
 import fp_growth
 
+#global variables
+__maxGain__ = 0.0
+__Fs__ = []
+
 #Input: An FP-tree P, min sup s
 #Output: A set of selected features Fs
 #Procedure DDPMine(P; s)
@@ -19,8 +23,12 @@ def ddpmine(P,s) :
     
     if a is None :
         return
-
-
+    
+    #6: Compute the transaction id list T(a) containing a;
+    
+    P0 = updateTree(P,Ta)
+    __Fs__.append(ddpmine(P0,s))
+    return __Fs__
 
 #Procedure branch and bound(P; s; ?)
 #1: if P = ?
@@ -40,4 +48,11 @@ def ddpmine(P,s) :
 #15: branch and bound(P?; s; ?);
     
 def branchAndBound(P,s,null) :
+    
+    return;
+
+
+def updateTree(P,Ta) :
+    
+    return;
     
