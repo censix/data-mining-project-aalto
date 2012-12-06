@@ -32,10 +32,10 @@ class FPTree(object):
         """
 
         point = self._root
-        
+
         last_point = None;
 
-        for item in transaction:
+        for item in transaction.itemset:
             next_point = point.search(item)
             if next_point:
                 # There is already a node in this tree for the current
@@ -53,7 +53,7 @@ class FPTree(object):
 
             point = next_point
             last_point = next_point
-        
+
         #add the id as the key and the label as the value to a dictionary stored in the node
         last_point.transactions[transaction.id] = transaction.label
 
@@ -135,5 +135,14 @@ class FPTree(object):
                     if node is tail:
                         self._routes[node.item] = self.Route(head, n)
                     break
+
+    def __repr__(self):
+        printable = []
+        for item, nodeiterator in self.items():
+            printable.append(item)
+            for node in nodeiterator:
+                printable.append(node)
+
+        return "\n".join([repr(s) for s in printable])
 
 

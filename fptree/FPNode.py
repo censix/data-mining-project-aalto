@@ -63,7 +63,7 @@ class FPNode(object):
     def tree(self):
         """The tree in which this node appears."""
         return self._tree
-    
+
     @property
     def item(self):
         """The item contained in this node."""
@@ -132,7 +132,7 @@ class FPNode(object):
     def __repr__(self):
         if self.root:
             return "<%s (root)>" % type(self).__name__
-        return "<%s %r (%r)>" % (type(self).__name__, self.item, self.count)
+        return "<%s %r (%r) %r>" % (type(self).__name__, self.item, self.count, self.transactions)
 
 
 
