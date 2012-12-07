@@ -27,6 +27,9 @@ class TransactionDatabase(object):
         only transactions that contain the given pattern.
         """
         pass
+    
+    def size(self):
+        return len(transactions)
 
     def labelSupport(self):
         pass
@@ -34,6 +37,12 @@ class TransactionDatabase(object):
     def labelSupport(self, pattern):
         """
         Label / transaction union support
+        """
+        pass
+    
+    def patternSupport(self,pattern):
+        """
+        Pattern support
         """
         pass
 

@@ -10,6 +10,7 @@ class DDPMine:
         pass
         self.fp_tree = FPTree()
         self._maxGain_ = 0.0
+        self._globalTransactionDatabase = transactionDatabase;
 
     def mine(self):
         """
@@ -20,53 +21,43 @@ class DDPMine:
     
     def buildTree(transactionDatabase):
     
+        self._globalTransactionDatabase = transactionDatabase;
+    
         master = FPTree()
         for transaction in transactionDatabase:
             master.add(transaction)
             
-            
-    #Procedure branch and bound(P; s; ?)
-    #1: if P = ?
-    #2: return;
-    #3: for each item ai in P do
-    #4: generate pattern ? = ai [ ? with support=ai.support;
-    #5: compute information gain IG(?);
-    #6: if IG(?) > maxIG
-    #7: maxIG := IG(?);
-    #8: bestP at := ?;
-    #9: construct pattern ?'s conditional database D?;
-    #10: IGub(jD?j) := upper bound(jD?j);
-    #11: if maxIG ? IGub(D?)
-    #12: skip mining on D?;
-    #13: else
-    #14: construct ?'s conditional FP-tree P?;
-    #15: branch and bound(P?; s; ?);
     
-    def branchAndBound(tree,support,prefix,database):
+    def branchAndBound(tree,support,prefix):
         
         for item, nodes in tree.items():
             
+            #make sure the support is sufficient
             support = sum(n.count for n in nodes)
             if support >= minimum_support and item not in suffix:
-                # New winner!
+                #we found a new possible canidate
                 found_set = [item] + suffix
                 yield (found_set, support) if include_support else found_set
                 
-                #TODO: construct conditional database
-                cond_database = None
+                #since we are looking for the best pattern globally we need to compute the patterns global information gain thus
+                #we use the global transaction database (this is how we get around creating the conditional database right away)
+                infoGain = UtilityMethods.InformationGain(self._globalTransactionDatabase.patternSupport(found_set),self._globalTransactionDatabase.labelSupport(),self._globalTransactionDatabase.labelSupport(found_set))
                 
-                infoGain = UtilityMethods.InformationGain(patternSupport,labelSupport,patternLabelUnionSupport)
-                
+                #if it is the best pattern then save it
                 if infoGain > self._maxGain_ :
                     self._maxGain_ = infoGain
                     bestPattern = found_set
                 
-                infoGainBound = UtilityMethods.InformationGainUpperBound(potentialSupport,labelSupport)    
+                #construct the conditional database of new canidate from the global database
+                conditionDatabase = self._globalTransactionDatabase.buildConditionalDatabase(self, found_set)
                 
+                #compute the information gain upperbound of this new conditional database based on the size of the conditional database and the global label support
+                infoGainBound = UtilityMethods.InformationGainUpperBound(conditionalDatabase.size()/self._globalTransactionDatabase.size(),self._globalTransactionDatabase.labelSupport())    
+                
+                #if potential for high information gain patterns then recursivly mine them
                 if self._maxGain_ >= infoGainBound :
                     pass
                 else :
-                # Build a conditional tree and recursively search for frequent
-                # itemsets within it.
-                    cond_tree = conditional_tree_from_paths(tree.prefix_paths(item),minimum_support)
-                    branchAndBound(cond_tree,support,item,cond_database)
+                # Build a conditional tree and recursively mine
+                    conditionalTree = conditional_tree_from_paths(tree.prefix_paths(item),minimum_support)
+                    branchAndBound(conditionalTree,support,item)
