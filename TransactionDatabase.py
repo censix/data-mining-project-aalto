@@ -28,6 +28,12 @@ class TransactionDatabase(object):
         """
         pass
     
+    def transactionListFromPattern(self,pattern) :
+        """
+        Gets the transaction id list of a certain pattern
+        """
+        pass
+    
     def size(self):
         return len(transactions)
 
