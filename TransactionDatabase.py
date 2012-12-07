@@ -20,6 +20,7 @@ class TransactionDatabase(object):
         # List of Transactions
         self.transactions = []
         self.itemSupportDict = defaultdict(lambda: 0)
+        self.labelSupportiveSymbol = 1
 
     def buildConditionalDatabase(self, pattern):
         """
@@ -29,28 +30,44 @@ class TransactionDatabase(object):
         pass
     
     def transactionListFromPattern(self,pattern) :
-        """
-        Gets the transaction id list of a certain pattern
-        """
+        transactionList = []
+        
+        for transaction in self.transactions :
+            if(pattern in transaction.itemset):
+                transactionList.append(transaction.id)
+                
+        return transactionList
         pass
     
     def size(self):
         return len(transactions)
 
     def labelSupport(self):
-        pass
+        count = 0
+        
+        for transaction in self.transactions :
+            if(transaction.label == labelSupportiveSymbol):
+                count++
+                
+        return count/self.size()
 
     def labelSupport(self, pattern):
-        """
-        Label / transaction union support
-        """
-        pass
+        count = 0
+        
+        for transaction in self.transactions :
+            if(transaction.label == labelSupportiveSymbol and pattern in transaction.itemset):
+                count++
+                
+        return count/self.size()
     
     def patternSupport(self,pattern):
-        """
-        Pattern support
-        """
-        pass
+        count = 0
+        
+        for transaction in self.transactions :
+            if(pattern in transaction.itemset):
+                count++
+                
+        return count/self.size()
 
     def removeTransactions(self, transaction_ids):
         """
