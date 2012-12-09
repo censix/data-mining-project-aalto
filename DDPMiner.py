@@ -6,26 +6,30 @@ class DDPMine:
     Main class implementing the DDPMine algorithm.
     """
     
-    def __init__(self, transactionDatabase):
-        pass
+    def __init__(self):
         self.fp_tree = FPTree()
         self._maxGain_ = 0.0
-        self._globalTransactionDatabase = transactionDatabase;
         self._bestPatterns = []
 
+    def mine(transactionDatabase,support):
+        self._globalTransactionDatabase = transactionDatabase
+        self.fp_tree = buildTree(transactionDatabase)
+        
+        return _mine(self.fp_tree,support)
+
     #need to decide whether to do this recursivly or not
-    def mine(self):
+    def _mine(P,s):
         """
         Does the heavy lifting of mining for the nodes – returns the list of most
         discriminative patterns.
         """
-        bestPattern = branchAndBound(self.fp_tree,s,null)
+        bestPattern = branchAndBound(P,s,null)
         if bestPattern = None:
             return
         transactionList = self._globalTransactionDatabase.transactionListFromPattern(bestPattern)
-        updatedTree = self.fp_tree.updateTree(transactionList)
-        self._bestPatterns.append(mine())
-        
+        updatedTree = P.updateTree(transactionList)
+        self._bestPatterns.append(_mine(P,s))
+        return self._bestPatterns
     
     def buildTree(transactionDatabase):
     
@@ -34,7 +38,6 @@ class DDPMine:
         master = FPTree()
         for transaction in transactionDatabase:
             master.add(transaction)
-            
     
     def branchAndBound(tree,support,prefix):
         
