@@ -27,7 +27,15 @@ class TransactionDatabase(object):
         Returns a new TransactionDatabase object with
         only transactions that contain the given pattern.
         """
-        pass
+        condDatabase = new TransactionDatabase()
+        
+        condDatabase.labelSupportiveSymbol = self.labelSupportiveSymbol
+                
+        for transaction in self.transactions :
+            if(pattern in transaction.itemset):
+                condDatabase.transactionList.append(transaction)
+                
+        return condDatabase
     
     def transactionListFromPattern(self,pattern) :
         transactionList = []
