@@ -45,8 +45,10 @@ class DDPMine:
             #get transaction list and update tree
             transactionList = self._globalTransactionDatabase.transactionListFromPattern(self._bestPattern)
 
-            P.UpdateTree(transactionList)
+            self._globalTransactionDatabase.removeTransactions(transactionList)
 
+            P = self.buildTree(self._globalTransactionDatabase)
+            
             #append the new best found pattern
             self._bestPatterns.append(self._bestPattern)
 

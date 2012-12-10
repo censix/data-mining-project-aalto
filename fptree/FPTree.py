@@ -206,7 +206,7 @@ class FPTree(object):
 	Updates the tree and decrements count in the node - removes node if count
 	is zero
 	"""
-  
+        
 	# Iterate over the transactions
 	for transaction in transactions:
 		next_point = self.root(self)
