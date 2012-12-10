@@ -41,7 +41,7 @@ class DDPMine:
             #get transaction list and update tree
             transactionList = self._globalTransactionDatabase.transactionListFromPattern(self._bestPattern)
             
-            P.updateTree(transactionList)
+            P.UpdateTree(transactionList)
             
             #append the new best found pattern
             self._bestPatterns.append(self._bestPattern)
@@ -99,4 +99,4 @@ class DDPMine:
                 else :
                 # Build a conditional tree and recursively mine
                     conditionalTree = tree.conditional_tree_from_paths(tree.prefix_paths(item),minimum_support)
-                    branchAndBound(conditionalTree,minimum_support,item)
+                    self.branchAndBound(conditionalTree,minimum_support,found_set)

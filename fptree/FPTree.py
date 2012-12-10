@@ -141,6 +141,58 @@ class FPTree(object):
                         self._routes[node.item] = self.Route(head, n)
                     break
 
+    def conditional_tree_from_paths(self,paths,minimum_support):
+        """Builds a conditional FP-tree from the given prefix paths."""
+        tree = FPTree()
+        condition_item = None
+        items = set()
+    
+        # Import the nodes in the paths into the new tree. Only the counts of the
+        # leaf notes matter; the remaining counts will be reconstructed from the
+        # leaf counts.
+        for path in paths:
+            if condition_item is None:
+                condition_item = path[-1].item
+    
+            point = tree.root
+            for node in path:
+                next_point = point.search(node.item)
+                if not next_point:
+                    # Add a new node to the tree.
+                    items.add(node.item)
+                    count = node.count if node.item == condition_item else 0
+                    next_point = FPNode(tree, node.item, count)
+                    point.add(next_point)
+                    tree._update_route(next_point)
+                point = next_point
+    
+        assert condition_item is not None
+    
+        # Calculate the counts of the non-leaf nodes.
+        for path in tree.prefix_paths(condition_item):
+            count = None
+            for node in reversed(path):
+                if count is not None:
+                    node._count += count
+                count = node.count
+    
+        # Eliminate the nodes for any items that are no longer frequent.
+        for item in items:
+            support = sum(n.count for n in tree.nodes(item))
+            if support < minimum_support:
+                # Doesn't make the cut anymore
+                for node in tree.nodes(item):
+                    if node.parent is not None:
+                        node.parent.remove(node)
+    
+        # Finally, remove the nodes corresponding to the item for which this
+        # conditional tree was generated.
+        for node in tree.nodes(condition_item):
+            if node.parent is not None: # the node might already be an orphan
+                node.parent.remove(node)
+    
+        return tree
+
     def __repr__(self):
         printable = []
         for item, nodeiterator in self.items():
