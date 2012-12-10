@@ -1,5 +1,6 @@
 # encoding: utf-8
 from fptree import FPNode, FPTree
+from utility_methods import UtilityMethods
 
 class DDPMine:
     """
@@ -12,25 +13,25 @@ class DDPMine:
         self._bestPattern = None
         self._bestPatterns = []
 
-    def mine(transactionDatabase,support):
+    def mine(self,transactionDatabase,support):
         self._globalTransactionDatabase = transactionDatabase
-        self.fp_tree = buildTree(transactionDatabase)
+        self.fp_tree = self.buildTree(transactionDatabase)
         
-        return _mine(self.fp_tree,support)
+        return self._mine(self.fp_tree,support)
 
-    def _mine(P,s):
+    def _mine(self,P,s):
         """
         Does the heavy lifting of mining for the nodes – returns the list of most
         discriminative patterns.
         """
         #while the tree is not empty 
-        while !P.empty :
+        while not P.empty :
             
             #branch and bound to find best pattern
-            branchAndBound(P,s,None)
+            self.branchAndBound(P,s,[])
             
             #if no best pattern then break
-            if self._bestPattern = None:
+            if self._bestPattern == None:
                 break
             
             #get transaction list and update tree
@@ -47,7 +48,7 @@ class DDPMine:
         #return the list of best patterns
         return self._bestPatterns
     
-    def buildTree(transactionDatabase):
+    def buildTree(self,transactionDatabase):
         
         master = FPTree()
         for transaction in transactionDatabase:
@@ -55,7 +56,7 @@ class DDPMine:
             
         return master
     
-    def branchAndBound(tree,support,suffix):
+    def branchAndBound(self,tree,minimum_support,suffix):
         
         for item, nodes in tree.items():
             
@@ -89,4 +90,4 @@ class DDPMine:
                 else :
                 # Build a conditional tree and recursively mine
                     conditionalTree = conditional_tree_from_paths(tree.prefix_paths(item),minimum_support)
-                    branchAndBound(conditionalTree,support,item)
+                    branchAndBound(conditionalTree,minimum_support,item)

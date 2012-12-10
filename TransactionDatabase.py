@@ -27,7 +27,7 @@ class TransactionDatabase(object):
         Returns a new TransactionDatabase object with
         only transactions that contain the given pattern.
         """
-        condDatabase = new TransactionDatabase()
+        condDatabase = TransactionDatabase()
         
         condDatabase.labelSupportiveSymbol = self.labelSupportiveSymbol
                 
@@ -47,14 +47,14 @@ class TransactionDatabase(object):
         return transactionList
     
     def size(self):
-        return len(transactions)
+        return len(self.transactions)
 
     def labelSupport(self):
         count = 0
         
         for transaction in self.transactions :
-            if(transaction.label == labelSupportiveSymbol):
-                count++
+            if(transaction.label == self.labelSupportiveSymbol):
+                count += 1
                 
         return count/self.size()
 
@@ -62,8 +62,8 @@ class TransactionDatabase(object):
         count = 0
         
         for transaction in self.transactions :
-            if(transaction.label == labelSupportiveSymbol and pattern in transaction.itemset):
-                count++
+            if(transaction.label == self.labelSupportiveSymbol and pattern in transaction.itemset):
+                count += 1
                 
         return count/self.size()
     
@@ -72,7 +72,7 @@ class TransactionDatabase(object):
         
         for transaction in self.transactions :
             if(pattern in transaction.itemset):
-                count++
+                count += 1
                 
         return count/self.size()
 
