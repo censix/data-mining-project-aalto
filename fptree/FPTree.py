@@ -214,14 +214,13 @@ class FPTree(object):
 		for item in transaction.itemset:
 			curr_point = next_point
 		        next_point = next_point.search(item) 
-			next_point._count -= next_point._count # update the count
-		
-		        # update the transaction ids		
-			next_point.transaction = filter(lambda v: transaction not in v, next_point.transaction)   				
+			next_point._count -= next_point._count # update the count		       			
 
 			if next_point._count is None: 
 				curr_point.remove(curr_point,next_point) 
-	                      
+	        
+		# update the transaction ids		
+		next_point.transaction = filter(lambda v: transaction.id not in v.id, next_point.transaction)   	
 
 
 
