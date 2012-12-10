@@ -29,48 +29,56 @@ class TransactionDatabase(object):
         only transactions that contain the given pattern.
         """
         condDatabase = TransactionDatabase()
-        
+
         condDatabase.labelSupportiveSymbol = self.labelSupportiveSymbol
-                
+
         for transaction in self.transactions :
-            if set(pattern) <= set(transaction.itemset):
+            # Slow way to check if itemset contains the pattern, but works
+            # If intersection of pattern and itemset equals the pattern,
+            # we can be sure that this transaction is covered by the pattern
+            pattern_set = set(pattern)
+            itemset_set = set(transaction.itemset)
+            if itemset_set.intersection(pattern_set) == pattern_set:
                 condDatabase.transactions.append(transaction)
-                
+
         return condDatabase
-    
+
     def transactionListFromPattern(self,pattern) :
         transactionList = []
-        
+
         for transaction in self.transactions :
-            if set(pattern) <= set(transaction.itemset):
+            # See buildConditionalDatabase
+            pattern_set = set(pattern)
+            itemset_set = set(transaction.itemset)
+            if itemset_set.intersection(pattern_set) == pattern_set:
                 transactionList.append(transaction.id)
-                
+
         return transactionList
-    
+
     def size(self):
         return len(self.transactions)
 
     def labelSupport(self):
         count = 0
-        
+
         for transaction in self.transactions :
             if(transaction.label == self.labelSupportiveSymbol):
                 count += 1
-                
+
         return count/self.size()
 
     def labelAndPatternSupport(self, pattern):
         count = 0
-        
+
         for transaction in self.transactions :
             if(transaction.label == self.labelSupportiveSymbol and set(pattern) <= set(transaction.itemset)):
                 count += 1
-                
+
         return count/self.size()
-    
+
     def patternSupport(self,pattern):
         count = 0
-        
+
         for transaction in self.transactions :
             if set(pattern) <= set(transaction.itemset) :
                 count += 1
