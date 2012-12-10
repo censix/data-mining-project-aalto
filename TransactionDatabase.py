@@ -75,7 +75,7 @@ class TransactionDatabase(object):
         count = 0
 
         for transaction in self.transactions :
-            if(transaction.label == self.labelSupportiveSymbol and set(pattern) <= set(transaction.itemset)):
+            if(transaction.label == self.labelSupportiveSymbol and transaction.contains(pattern)):
                 count += 1
 
         return count/self.size()
