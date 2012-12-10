@@ -62,6 +62,10 @@ class TransactionDatabase(object):
     def size(self):
         return len(self.transactions)
 
+    def __len__(self):
+        # Magic method for len() support
+        return len(self.transactions)
+
     def labelSupport(self):
         count = 0
 
@@ -132,8 +136,6 @@ class TransactionDatabase(object):
 
         for i, line in enumerate(csv.reader(open(filename))):
             t = Transaction(i, line[:-1], line[-1])
-            print "adding transaction"
-            print t
             database.add(t)
 
         return database
