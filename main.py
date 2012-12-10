@@ -13,7 +13,7 @@ if __name__ == "__main__":
     database.cleanAndPrune(2)
     
     miner = DDPMine()
-    miner.mine(database,.05)
+    print miner.mine(database,0)
     
     """
     database = TransactionDatabase.loadFromFile("test.csv")

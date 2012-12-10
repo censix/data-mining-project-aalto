@@ -2,8 +2,11 @@ from math import log
 class UtilityMethods:
     @staticmethod
     def InformationGain(patternSupport,labelSupport,patternLabelUnionSupport):
-        return UtilityMethods.__InformationGainFormula(patternSupport,labelSupport,patternLabelUnionSupport/patternSupport)
-    
+	if patternSupport == 0 or labelSupport == 0 :
+	    return 0
+	else :
+	    return UtilityMethods.__InformationGainFormula(patternSupport,labelSupport,patternLabelUnionSupport/patternSupport)
+
     @staticmethod
     def InformationGainUpperBound(potentialSupport,labelSupport):
         

@@ -30,6 +30,8 @@ class DDPMine:
             #branch and bound to find best pattern
             self.branchAndBound(P,s,[])
             
+            print "best pattern:" + self._bestPattern
+            
             #if no best pattern then break
             if self._bestPattern == None:
                 break
@@ -78,7 +80,7 @@ class DDPMine:
                 
                 #construct the conditional database of new canidate from the global database
                 #complexity of this step is probably N
-                conditionDatabase = self._globalTransactionDatabase.buildConditionalDatabase(self, found_set)
+                conditionalDatabase = self._globalTransactionDatabase.buildConditionalDatabase(found_set)
                 
                 #compute the information gain upperbound of this new conditional database based on the size of the conditional database and the global label support
                 #complexity of this step should be 1
