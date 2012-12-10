@@ -68,7 +68,7 @@ class DDPMine:
                 #since we are looking for the best pattern globally we need to compute the pattern's global information gain thus
                 #we use the global transaction database (this is how we get around creating the conditional database right away)
                 #complexity of this step is 2N where N is size of global database
-                infoGain = UtilityMethods.InformationGain(self._globalTransactionDatabase.patternSupport(found_set),self._globalTransactionDatabase.labelSupport(),self._globalTransactionDatabase.labelSupport(found_set))
+                infoGain = UtilityMethods.InformationGain(self._globalTransactionDatabase.patternSupport(found_set),self._globalTransactionDatabase.labelSupport(),self._globalTransactionDatabase.labelAndPatternSupport(found_set))
                 
                 #if it is the best pattern then save it
                 if infoGain > self._maxGain_ :

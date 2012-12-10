@@ -58,7 +58,7 @@ class TransactionDatabase(object):
                 
         return count/self.size()
 
-    def labelSupport(self, pattern):
+    def labelAndPatternSupport(self, pattern):
         count = 0
         
         for transaction in self.transactions :
