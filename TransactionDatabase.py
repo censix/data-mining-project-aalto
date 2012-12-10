@@ -84,7 +84,7 @@ class TransactionDatabase(object):
         count = 0
 
         for transaction in self.transactions :
-            if set(pattern) <= set(transaction.itemset) :
+            if transaction.contains(pattern):
                 count += 1
         return count/self.size()
 
