@@ -12,6 +12,17 @@ class Transaction(object):
     def __repr__(self):
         return "Transaction(id={0}, itemset={1}, label={2})".format(self.id, self.itemset, self.label)
 
+    def contains(self, pattern):
+        """
+        Returns true if the itemset of this transactions contains the given pattern.
+        """
+        # Slow way to check if the itemset contains the pattern, but works
+        # If intersection of pattern and itemset equals the pattern,
+        # we can be sure that this transaction is covered by the pattern
+        pattern_set = set(pattern)
+        itemset_set = set(self.itemset)
+        return (itemset_set.intersection(pattern_set) == pattern_set)
+
 
 class TransactionDatabase(object):
     """
@@ -33,12 +44,7 @@ class TransactionDatabase(object):
         condDatabase.labelSupportiveSymbol = self.labelSupportiveSymbol
 
         for transaction in self.transactions :
-            # Slow way to check if itemset contains the pattern, but works
-            # If intersection of pattern and itemset equals the pattern,
-            # we can be sure that this transaction is covered by the pattern
-            pattern_set = set(pattern)
-            itemset_set = set(transaction.itemset)
-            if itemset_set.intersection(pattern_set) == pattern_set:
+            if transaction.contains(pattern):
                 condDatabase.transactions.append(transaction)
 
         return condDatabase
@@ -48,9 +54,7 @@ class TransactionDatabase(object):
 
         for transaction in self.transactions :
             # See buildConditionalDatabase
-            pattern_set = set(pattern)
-            itemset_set = set(transaction.itemset)
-            if itemset_set.intersection(pattern_set) == pattern_set:
+            if transaction.contains(pattern):
                 transactionList.append(transaction.id)
 
         return transactionList
