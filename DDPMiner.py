@@ -30,7 +30,8 @@ class DDPMine:
             #branch and bound to find best pattern
             self.branchAndBound(P,s,[])
             
-            print "best pattern:" + self._bestPattern
+            print "best pattern:"
+            print self._bestPattern
             
             #if no best pattern then break
             if self._bestPattern == None:
@@ -46,6 +47,7 @@ class DDPMine:
             
             #reset the best pattern
             self._bestPattern = None
+            self._maxGain_ = 0
             
         #return the list of best patterns
         return self._bestPatterns
@@ -67,11 +69,15 @@ class DDPMine:
             if support >= minimum_support and item not in suffix:
                 #we found a new possible canidate
                 found_set = [item] + suffix
+                print "found set:"
+                print found_set
                 
                 #since we are looking for the best pattern globally we need to compute the pattern's global information gain thus
                 #we use the global transaction database (this is how we get around creating the conditional database right away)
                 #complexity of this step is 2N where N is size of global database
                 infoGain = UtilityMethods.InformationGain(self._globalTransactionDatabase.patternSupport(found_set),self._globalTransactionDatabase.labelSupport(),self._globalTransactionDatabase.labelAndPatternSupport(found_set))
+                print "info gain:"
+                print infoGain
                 
                 #if it is the best pattern then save it
                 if infoGain > self._maxGain_ :

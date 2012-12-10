@@ -21,6 +21,10 @@ class UtilityMethods:
     
     @staticmethod
     def __InformationGainFormula(o,p,q):
+	
+	if o==0 :
+	    return 0
+	
         #use binary conditional entropy formula from p.18 of HONG CHENG Thesis 
         conditionalProb_term1 = -o*q*(UtilityMethods.__Log2(q))-o*(1-q)*(UtilityMethods.__Log2(1-q))
         conditionalProb_term2 = (o*q-p)*(UtilityMethods.__Log2((p-o*q)/(1-o)))

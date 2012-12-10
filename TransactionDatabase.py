@@ -32,8 +32,8 @@ class TransactionDatabase(object):
         condDatabase.labelSupportiveSymbol = self.labelSupportiveSymbol
                 
         for transaction in self.transactions :
-            if(pattern in transaction.itemset):
-                condDatabase.transactionList.append(transaction)
+            if set(pattern) <= set(transaction.itemset):
+                condDatabase.transactions.append(transaction)
                 
         return condDatabase
     
@@ -41,7 +41,7 @@ class TransactionDatabase(object):
         transactionList = []
         
         for transaction in self.transactions :
-            if(pattern in transaction.itemset):
+            if set(pattern) <= set(transaction.itemset):
                 transactionList.append(transaction.id)
                 
         return transactionList
@@ -62,7 +62,7 @@ class TransactionDatabase(object):
         count = 0
         
         for transaction in self.transactions :
-            if(transaction.label == self.labelSupportiveSymbol and pattern in transaction.itemset):
+            if(transaction.label == self.labelSupportiveSymbol and set(pattern) <= set(transaction.itemset)):
                 count += 1
                 
         return count/self.size()
@@ -71,9 +71,14 @@ class TransactionDatabase(object):
         count = 0
         
         for transaction in self.transactions :
-            if(pattern in transaction.itemset):
+            print "checking if"
+            print pattern
+            print "in"
+            print transaction.itemset
+            if set(pattern) <= set(transaction.itemset) :
                 count += 1
-                
+            print "pattern support:"
+            print count
         return count/self.size()
 
     def removeTransactions(self, transaction_ids):
@@ -120,6 +125,8 @@ class TransactionDatabase(object):
 
         for i, line in enumerate(csv.reader(open(filename))):
             t = Transaction(i, line[:-1], line[-1])
+            print "adding transaction"
+            print t
             database.add(t)
 
         return database
