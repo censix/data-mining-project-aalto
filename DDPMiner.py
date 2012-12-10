@@ -9,6 +9,7 @@ class DDPMine:
     def __init__(self):
         self.fp_tree = FPTree()
         self._maxGain_ = 0.0
+        self._bestPattern = None
         self._bestPatterns = []
 
     def mine(transactionDatabase,support):
@@ -22,18 +23,27 @@ class DDPMine:
         Does the heavy lifting of mining for the nodes – returns the list of most
         discriminative patterns.
         """
-        #if tree is empty or no good patterns found then return
-        if P.empty :
-            return
-        bestPattern = branchAndBound(P,s,null)
-        if bestPattern = None:
-            return
-        #get the transaction list we need to remove from the tree
-        transactionList = self._globalTransactionDatabase.transactionListFromPattern(bestPattern)
-        #update the tree
-        P.updateTree(transactionList)
-        #recursivly mine the tree and save the best patterns
-        self._bestPatterns.append(_mine(P,s))
+        #while the tree is not empty 
+        while !P.empty :
+            
+            #branch and bound to find best pattern
+            branchAndBound(P,s,None)
+            
+            #if no best pattern then break
+            if self._bestPattern = None:
+                break
+            
+            #get transaction list and update tree
+            transactionList = self._globalTransactionDatabase.transactionListFromPattern(self._bestPattern)
+            
+            P.updateTree(transactionList)
+            
+            #append the new best found pattern
+            self._bestPatterns.append(self._bestPattern)
+            
+            #reset the best pattern
+            self._bestPattern = None
+            
         #return the list of best patterns
         return self._bestPatterns
     
@@ -45,7 +55,7 @@ class DDPMine:
             
         return master
     
-    def branchAndBound(tree,support,prefix):
+    def branchAndBound(tree,support,suffix):
         
         for item, nodes in tree.items():
             
@@ -63,7 +73,7 @@ class DDPMine:
                 #if it is the best pattern then save it
                 if infoGain > self._maxGain_ :
                     self._maxGain_ = infoGain
-                    bestPattern = found_set
+                    self._bestPattern = found_set
                 
                 #construct the conditional database of new canidate from the global database
                 #complexity of this step is probably N
