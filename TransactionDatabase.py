@@ -45,7 +45,6 @@ class TransactionDatabase(object):
                 transactionList.append(transaction.id)
                 
         return transactionList
-        pass
     
     def size(self):
         return len(transactions)

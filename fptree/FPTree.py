@@ -25,6 +25,11 @@ class FPTree(object):
     def root(self):
         """The root node of the tree."""
         return self._root
+    
+    @property
+    def empty(self):
+        #if the root node has no children then the tree is empty
+        return len(self._root._children)==0
 
     def add(self, transaction):
         """

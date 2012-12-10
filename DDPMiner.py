@@ -17,27 +17,33 @@ class DDPMine:
         
         return _mine(self.fp_tree,support)
 
-    #need to decide whether to do this recursivly or not
     def _mine(P,s):
         """
         Does the heavy lifting of mining for the nodes – returns the list of most
         discriminative patterns.
         """
+        #if tree is empty or no good patterns found then return
+        if P.empty :
+            return
         bestPattern = branchAndBound(P,s,null)
         if bestPattern = None:
             return
+        #get the transaction list we need to remove from the tree
         transactionList = self._globalTransactionDatabase.transactionListFromPattern(bestPattern)
-        updatedTree = P.updateTree(transactionList)
+        #update the tree
+        P.updateTree(transactionList)
+        #recursivly mine the tree and save the best patterns
         self._bestPatterns.append(_mine(P,s))
+        #return the list of best patterns
         return self._bestPatterns
     
     def buildTree(transactionDatabase):
-    
-        self._globalTransactionDatabase = transactionDatabase;
-    
+        
         master = FPTree()
         for transaction in transactionDatabase:
             master.add(transaction)
+            
+        return master
     
     def branchAndBound(tree,support,prefix):
         
