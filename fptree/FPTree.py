@@ -203,25 +203,25 @@ class FPTree(object):
 
     def UpdateTree(self, transactions):
 	"""
-	Updates the tree and decrements count in the node - removes node if count
-	is zero
+	1. Updates the tree and decrements count in the node
+	2. Updates the transaction IDs	
+	3. Removes node if count is zero
 	"""
         
 	# Iterate over the transactions
 	for transaction in transactions:
-		next_point = self.root(self)
+		next_point = self.root(self) # Start from the root
 		for item in transaction.itemset:
 			curr_point = next_point
-		        next_point = next_point.search(item)
-			next_point._count = next_point._count -1 # update the count
-			
-			if next_point._count is 0: 
-				curr_point._remove(curr_point,next_point) 
+		        next_point = next_point.search(item) 
+			next_point._count -= next_point._count # update the count
 		
-		# Some code for updating transaction ID	
-		
-		
-    
+		        # update the transaction ids		
+			next_point.transaction = filter(lambda v: transaction not in v, next_point.transaction)   				
+
+			if next_point._count is None: 
+				curr_point.remove(curr_point,next_point) 
+	                      
 
 
 
