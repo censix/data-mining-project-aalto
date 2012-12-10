@@ -1,4 +1,5 @@
 # encoding: utf-8
+from __future__ import division
 from fptree import FPNode, FPTree
 from utility_methods import UtilityMethods
 
@@ -97,5 +98,5 @@ class DDPMine:
                     pass
                 else :
                 # Build a conditional tree and recursively mine
-                    conditionalTree = conditional_tree_from_paths(tree.prefix_paths(item),minimum_support)
+                    conditionalTree = tree.conditional_tree_from_paths(tree.prefix_paths(item),minimum_support)
                     branchAndBound(conditionalTree,minimum_support,item)

@@ -1,3 +1,4 @@
+from __future__ import division
 from collections import namedtuple, defaultdict
 import csv
 
@@ -20,7 +21,7 @@ class TransactionDatabase(object):
         # List of Transactions
         self.transactions = []
         self.itemSupportDict = defaultdict(lambda: 0)
-        self.labelSupportiveSymbol = 1
+        self.labelSupportiveSymbol = "1"
 
     def buildConditionalDatabase(self, pattern):
         """
@@ -53,6 +54,10 @@ class TransactionDatabase(object):
         count = 0
         
         for transaction in self.transactions :
+            print "checking if"
+            print transaction.label
+            print "is"
+            print self.labelSupportiveSymbol
             if(transaction.label == self.labelSupportiveSymbol):
                 count += 1
                 
@@ -71,14 +76,10 @@ class TransactionDatabase(object):
         count = 0
         
         for transaction in self.transactions :
-            print "checking if"
-            print pattern
-            print "in"
-            print transaction.itemset
             if set(pattern) <= set(transaction.itemset) :
                 count += 1
             print "pattern support:"
-            print count
+            print count/self.size()
         return count/self.size()
 
     def removeTransactions(self, transaction_ids):
