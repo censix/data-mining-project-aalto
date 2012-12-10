@@ -28,11 +28,11 @@ class TransactionDatabase(object):
     """
     Class for storing transactions.
     """
-    def __init__(self):
+    def __init__(self, supportive_label="1"):
         # List of Transactions
         self.transactions = []
         self.itemSupportDict = defaultdict(lambda: 0)
-        self.labelSupportiveSymbol = "1"
+        self.labelSupportiveSymbol = supportive_label
 
     def buildConditionalDatabase(self, pattern):
         """
@@ -73,7 +73,7 @@ class TransactionDatabase(object):
             if(transaction.label == self.labelSupportiveSymbol):
                 count += 1
 
-        return count/self.size()
+        return count/len(self)
 
     def labelAndPatternSupport(self, pattern):
         count = 0
@@ -82,7 +82,7 @@ class TransactionDatabase(object):
             if(transaction.label == self.labelSupportiveSymbol and transaction.contains(pattern)):
                 count += 1
 
-        return count/self.size()
+        return count/len(self)
 
     def patternSupport(self,pattern):
         count = 0
@@ -90,7 +90,8 @@ class TransactionDatabase(object):
         for transaction in self.transactions :
             if transaction.contains(pattern):
                 count += 1
-        return count/self.size()
+
+        return count/len(self)
 
     def removeTransactions(self, transaction_ids):
         """
