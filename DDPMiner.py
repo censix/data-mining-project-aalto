@@ -33,6 +33,8 @@ class DDPMine:
             
             print "best pattern:"
             print self._bestPattern
+            print "Max Gain:"
+            print self._maxGain_
             
             #if no best pattern then break
             if self._bestPattern == None:

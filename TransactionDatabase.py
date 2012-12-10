@@ -54,10 +54,6 @@ class TransactionDatabase(object):
         count = 0
         
         for transaction in self.transactions :
-            print "checking if"
-            print transaction.label
-            print "is"
-            print self.labelSupportiveSymbol
             if(transaction.label == self.labelSupportiveSymbol):
                 count += 1
                 
@@ -78,8 +74,6 @@ class TransactionDatabase(object):
         for transaction in self.transactions :
             if set(pattern) <= set(transaction.itemset) :
                 count += 1
-            print "pattern support:"
-            print count/self.size()
         return count/self.size()
 
     def removeTransactions(self, transaction_ids):
