@@ -22,10 +22,10 @@ class UtilityMethods:
     @staticmethod
     def __InformationGainFormula(o,p,q):
 	
-	print "o,p,q"
-	print o
-	print p
-	print q
+	#print "o,p,q"
+	#print o
+	#print p
+	#print q
 	
 	if o==0 :
 	    return 0
@@ -54,7 +54,10 @@ class UtilityMethods:
     @staticmethod
     def __Log2_wDivision(x,y):
         ans = 0
-	if x != 0 and y != 0:
-	    ans = log(x/y,2)
+	try:
+	    if x != 0 and y != 0 and (x/y) != 0:
+		ans = log(x/y,2)
+	except ValueError:
+	    pass
 	return ans
     

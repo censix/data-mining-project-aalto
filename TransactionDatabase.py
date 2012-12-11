@@ -28,7 +28,7 @@ class TransactionDatabase(object):
     """
     Class for storing transactions.
     """
-    def __init__(self, supportive_label="1"):
+    def __init__(self, supportive_label):
         # List of Transactions
         self.transactions = []
         self.itemSupportDict = defaultdict(lambda: 0)
@@ -39,9 +39,7 @@ class TransactionDatabase(object):
         Returns a new TransactionDatabase object with
         only transactions that contain the given pattern.
         """
-        condDatabase = TransactionDatabase()
-
-        condDatabase.labelSupportiveSymbol = self.labelSupportiveSymbol
+        condDatabase = TransactionDatabase(self.labelSupportiveSymbol)
 
         for transaction in self.transactions :
             if transaction.contains(pattern):
@@ -70,6 +68,10 @@ class TransactionDatabase(object):
         count = 0
 
         for transaction in self.transactions :
+            #print "comparing"
+            #print transaction.label
+            #print ":"
+            #print self.labelSupportiveSymbol
             if(transaction.label == self.labelSupportiveSymbol):
                 count += 1
 
@@ -128,12 +130,12 @@ class TransactionDatabase(object):
             self.itemSupportDict[item] += 1
 
     @staticmethod
-    def loadFromFile(filename):
+    def loadFromFile(filename,supportive_label):
         """
         Loads transactions from CSV file of form
         a,b,c...,label
         """
-        database = TransactionDatabase()
+        database = TransactionDatabase(supportive_label)
 
         for i, line in enumerate(csv.reader(open(filename))):
             t = Transaction(i, line[:-1], line[-1])

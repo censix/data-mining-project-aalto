@@ -16,15 +16,17 @@ if __name__ == "__main__":
 
     (options, args) = parser.parse_args()
 
-    if len(args) != 1:
-        parser.error("You must give the filename.")
+    if len(args) != 3:
+        parser.error("You must give the filename, label support symbol, and minimum support.")
 
     print "Mining from file %s..." % args[0]
-    database = TransactionDatabase.loadFromFile(args[0])
+    print "Using label support symbol %s..." % args[1]
+    print "Using support of %s..." % args[2]
+    database = TransactionDatabase.loadFromFile(args[0],args[1])
     #database.cleanAndPrune(2)
 
-    miner = DDPMine(debug=options.debug)
-    print miner.mine(database,0)
+    miner = DDPMine(debug=False)
+    print miner.mine(database,int(float(args[2])))
 
     """
     database = TransactionDatabase.loadFromFile("test.csv")
