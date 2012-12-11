@@ -33,6 +33,8 @@ class TransactionDatabase(object):
         self.labelSupportiveSymbol = supportive_label
         self.labelSupportCache = None
         self.dbChangedBool = True
+        self.patternCache = []
+        self.lastPatternChecked = None
 
     def buildConditionalDatabase(self, pattern):
         """
@@ -40,7 +42,7 @@ class TransactionDatabase(object):
         only transactions that contain the given pattern.
         """
         condDatabase = TransactionDatabase(self.labelSupportiveSymbol)
-        patternSet = set(pattern)
+        patternSet = frozenset(pattern)
 
         for transaction in self.transactions :
             if transaction.contains(patternSet):
@@ -51,7 +53,7 @@ class TransactionDatabase(object):
     def transactionListFromPattern(self,pattern) :
         transactionList = []
         
-        patternSet = set(pattern)
+        patternSet = frozenset(pattern)
 
         for transaction in self.transactions :
             # See buildConditionalDatabase
@@ -90,22 +92,34 @@ class TransactionDatabase(object):
     def labelAndPatternSupport(self, pattern):
         count = 0
 
-        patternSet = set(pattern)
-
-        for transaction in self.transactions :
-            if(transaction.label == self.labelSupportiveSymbol and transaction.contains(patternSet)):
-                count += 1
-
+        patternSet = frozenset(pattern)
+        
+        if patternSet == self.lastPatternChecked :
+            
+            for transaction in self.patternCache :
+                if(transaction.label == self.labelSupportiveSymbol):
+                    count += 1
+        else :
+            
+            for transaction in self.transactions :
+                if(transaction.label == self.labelSupportiveSymbol and patternSet.issubset(transaction.frozitemset)):
+                    count += 1
+                    
         return count/len(self)
 
     def patternSupport(self,pattern):
         count = 0
         
-        patternSet = set(pattern)
+        patternSet = frozenset(pattern)
+        lastPatternCk = []
         
         for transaction in self.transactions :
-            if transaction.contains(patternSet):
+            #if transaction.contains(patternSet):
+            if patternSet.issubset(transaction.frozitemset) :
                 count += 1
+                lastPatternCk.append(transaction)
+        self.lastPatternChecked = patternSet
+        self.patternCache = lastPatternCk
         return count/len(self)
 
     def removeTransactions(self, transaction_ids):
