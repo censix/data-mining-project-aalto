@@ -22,8 +22,7 @@ if __name__ == "__main__":
     print "Mining from file %s..." % args[0]
     print "Using label support symbol %s..." % args[1]
     print "Using support of %s..." % args[2]
-    database = TransactionDatabase.loadFromFile(args[0],args[1])
-    #database.cleanAndPrune(2)
+    database = TransactionDatabase.loadFromFile(args[0],args[1],int(float(args[2])))
 
     miner = DDPMine(debug=False)
     print miner.mine(database,int(float(args[2])))
