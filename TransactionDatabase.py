@@ -52,7 +52,7 @@ class TransactionDatabase(object):
 
     def transactionListFromPattern(self,pattern) :
         transactionList = []
-        
+
         patternSet = frozenset(pattern)
 
         for transaction in self.transactions :
@@ -70,10 +70,10 @@ class TransactionDatabase(object):
         return len(self.transactions)
 
     def labelSupport(self):
-        
+
         if self.dbChangedBool :
             count = 0
-    
+
             for transaction in self.transactions :
                 #print "comparing"
                 #print transaction.label
@@ -81,7 +81,7 @@ class TransactionDatabase(object):
                 #print self.labelSupportiveSymbol
                 if(transaction.label == self.labelSupportiveSymbol):
                     count += 1
-    
+
                 labelSupport = count/len(self)
                 self.labelSupportCache = labelSupport
                 self.dbChangedBool = False
@@ -93,26 +93,26 @@ class TransactionDatabase(object):
         count = 0
 
         patternSet = frozenset(pattern)
-        
+
         if patternSet == self.lastPatternChecked :
-            
+
             for transaction in self.patternCache :
                 if(transaction.label == self.labelSupportiveSymbol):
                     count += 1
         else :
-            
+
             for transaction in self.transactions :
                 if(transaction.label == self.labelSupportiveSymbol and patternSet.issubset(transaction.frozitemset)):
                     count += 1
-                    
+
         return count/len(self)
 
     def patternSupport(self,pattern):
         count = 0
-        
+
         patternSet = frozenset(pattern)
         lastPatternCk = []
-        
+
         for transaction in self.transactions :
             #if transaction.contains(patternSet):
             if patternSet.issubset(transaction.frozitemset) :
@@ -144,12 +144,14 @@ class TransactionDatabase(object):
         # Function to clean transaction from
         def clean_transaction(transaction):
             transaction.itemset = filter(lambda v: v in self.itemSupportDict, transaction.itemset)
+            transaction.itemset.sort(key=str.upper)
             transaction.itemset.sort(key=lambda v: self.itemSupportDict[v], reverse=True)
             return transaction
 
         for i, transaction in enumerate(self.transactions):
-            self.transactions[i] = clean_transaction(transaction)
-            
+            cleaned = clean_transaction(transaction)
+            self.transactions[i] = cleaned
+
         if self.dbChangedBool == False :
             self.dbChangedBool = True
 
@@ -174,7 +176,7 @@ class TransactionDatabase(object):
         for i, line in enumerate(csv.reader(open(filename))):
             t = Transaction(i, line[:-1], line[-1])
             database.add(t)
-        
+
         database.cleanAndPrune(min_support)
 
         return database
