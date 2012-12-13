@@ -1,5 +1,9 @@
-a,b,c,d,1
 b,d,a,c,0
 a,b,1
-b,c,1
+a,b,c,1
 a,b,c,0
+c,b,1
+b,d,1
+b,d,c,1
+b,c,0
+b,0

@@ -30,20 +30,17 @@ class DDPMine:
         """
         #while the tree is not empty
         while not P.empty :
-            
-            print "size"
-            print self._globalTransactionDatabase.size()
-            
+            size = self._globalTransactionDatabase.size()
+
             start = time.clock()
-            
+
             #branch and bound to find best pattern
             self.branchAndBound(P,s,[])
-            
+
             elapsed = time.clock() - start
-            
-            print "found best pattern in..."
-            print elapsed
-            
+
+            print "Transactions: %d – found best pattern '%s' in %f seconds" % (size, "".join([] if not self._bestPattern else self._bestPattern), elapsed)
+
             if self.debug:
                 print "best pattern:"
                 print self._bestPattern
@@ -60,7 +57,7 @@ class DDPMine:
             self._globalTransactionDatabase.removeTransactions(transactionList)
 
             P = self.buildTree(self._globalTransactionDatabase)
-            
+
             #append the new best found pattern
             self._bestPatterns.append(self._bestPattern)
 
@@ -83,25 +80,25 @@ class DDPMine:
     def branchAndBound(self,tree,minimum_support,suffix):
 
         for item, nodes in tree.items():
-            
+
             support = 0
-            
+
             for n in nodes :
                 count = n.count
-                print count
+                #print count
                 support += count
-            
+
             #make sure the support is sufficient
             #support = sum(n.count for n in nodes)
-            
+
             if support >= minimum_support and item not in suffix:
                 #we found a new possible canidate
                 found_set = [item] + suffix
 
-                print "support"
-                print support
-                print "---"
-                
+                #print "support"
+                #print support
+                #print "---"
+
                 #since we are looking for the best pattern globally we need to compute the pattern's global information
                 infoGain = UtilityMethods.InformationGain(support/self._globalTransactionDatabase.size(),self._globalTransactionDatabase.labelSupport(),self._globalTransactionDatabase.labelAndPatternSupport(found_set))
 
@@ -112,7 +109,7 @@ class DDPMine:
 
                 #construct the conditional database of new canidate from the global database
                 conditionalDatabase = self._globalTransactionDatabase.buildConditionalDatabase(found_set)
-                
+
 
                 #compute the information gain upperbound of this new conditional database based on the size of the conditional database and the global label support
                 infoGainBound = UtilityMethods.InformationGainUpperBound(conditionalDatabase.size()/self._globalTransactionDatabase.size(),self._globalTransactionDatabase.labelSupport())
