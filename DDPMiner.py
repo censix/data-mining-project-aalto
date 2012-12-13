@@ -2,6 +2,7 @@
 from __future__ import division
 from fptree import FPNode, FPTree
 from utility_methods import UtilityMethods
+import time
 
 class DDPMine:
     """
@@ -18,6 +19,7 @@ class DDPMine:
     def mine(self,transactionDatabase,support):
         self._globalTransactionDatabase = transactionDatabase
         self.fp_tree = self.buildTree(transactionDatabase)
+        self._globalFPTree = self.fp_tree
 
         return self._mine(self.fp_tree,support)
 
@@ -28,10 +30,20 @@ class DDPMine:
         """
         #while the tree is not empty
         while not P.empty :
-
+            
+            print "size"
+            print self._globalTransactionDatabase.size()
+            
+            start = time.clock()
+            
             #branch and bound to find best pattern
             self.branchAndBound(P,s,[])
-
+            
+            elapsed = time.clock() - start
+            
+            print "found best pattern in..."
+            print elapsed
+            
             if self.debug:
                 print "best pattern:"
                 print self._bestPattern
@@ -63,6 +75,7 @@ class DDPMine:
 
         master = FPTree()
         for transaction in transactionDatabase:
+            #print transaction
             master.add(transaction)
 
         return master
@@ -70,23 +83,27 @@ class DDPMine:
     def branchAndBound(self,tree,minimum_support,suffix):
 
         for item, nodes in tree.items():
-
+            
+            support = 0
+            
+            for n in nodes :
+                count = n.count
+                print count
+                support += count
+            
             #make sure the support is sufficient
-            support = sum(n.count for n in nodes)
+            #support = sum(n.count for n in nodes)
+            
             if support >= minimum_support and item not in suffix:
                 #we found a new possible canidate
                 found_set = [item] + suffix
-                if self.debug:
-                    print "found set:"
-                    print found_set
 
-                #since we are looking for the best pattern globally we need to compute the pattern's global information gain thus
-                #we use the global transaction database (this is how we get around creating the conditional database right away)
-                #complexity of this step is 2N where N is size of global database
-                infoGain = UtilityMethods.InformationGain(self._globalTransactionDatabase.patternSupport(found_set),self._globalTransactionDatabase.labelSupport(),self._globalTransactionDatabase.labelAndPatternSupport(found_set))
-                if self.debug:
-                    print "info gain:"
-                    print infoGain
+                print "support"
+                print support
+                print "---"
+                
+                #since we are looking for the best pattern globally we need to compute the pattern's global information
+                infoGain = UtilityMethods.InformationGain(support/self._globalTransactionDatabase.size(),self._globalTransactionDatabase.labelSupport(),self._globalTransactionDatabase.labelAndPatternSupport(found_set))
 
                 #if it is the best pattern then save it
                 if infoGain > self._maxGain_ :
@@ -94,11 +111,10 @@ class DDPMine:
                     self._bestPattern = found_set
 
                 #construct the conditional database of new canidate from the global database
-                #complexity of this step is probably N
                 conditionalDatabase = self._globalTransactionDatabase.buildConditionalDatabase(found_set)
+                
 
                 #compute the information gain upperbound of this new conditional database based on the size of the conditional database and the global label support
-                #complexity of this step should be 1
                 infoGainBound = UtilityMethods.InformationGainUpperBound(conditionalDatabase.size()/self._globalTransactionDatabase.size(),self._globalTransactionDatabase.labelSupport())
 
                 #if potential for high information gain patterns then recursivly mine them
